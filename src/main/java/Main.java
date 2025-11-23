@@ -19,9 +19,9 @@ public class Main {
         }
         else if(command.startsWith("type ")){
             if(commandList.contains(command.substring(5)))
-                System.out.println(command + ": is a shell builtin");
+                System.out.println(command.substring(5) + ": is a shell builtin");
             else
-                System.out.println(command + ": not found");
+                System.out.println(command.substring(5) + ": not found");
         }
         else
             // Prints the "<command>: command not found" message
