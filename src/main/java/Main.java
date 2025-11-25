@@ -7,7 +7,6 @@ public class Main {
         ArrayList<String> commandList = new ArrayList<>(Arrays.asList("exit", "echo", "type"));
         //Implement REPL 
         while(true){
-        // TODO: Uncomment the code below to pass the first stage
         System.out.print("$ ");
         // Captures the user's command in the "command" variable
         Scanner scanner = new Scanner(System.in);
