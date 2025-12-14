@@ -35,7 +35,7 @@ public class Main {
         String directory = command.substring(2).trim();
 
         if(directory.equals("~")){
-          currentDirectory = new File(System.getProperty("user.home"));
+          currentDirectory = new File(System.getProperty("user.dir"));
           continue;
         }
 
