@@ -130,6 +130,16 @@ public class Main {
 
     // Escape : take the next character literally
     // invariant : You can only escape one character
+    if(character == '\\' && inDoubleQuotes){
+      if(i+1 < argument.length() && (argument.charAt(i+1) == '"' || argument.charAt(i+1) == '\\')){
+        current.append(argument.charAt(i+1));
+        i++; // skip next character
+      }else{
+        current.append(character);
+      }
+      continue;
+    }
+
     if(character == '\\' && !inSingleQuotes && !inDoubleQuotes){
       if(i+1 < argument.length()){
         current.append(argument.charAt(i+1));
