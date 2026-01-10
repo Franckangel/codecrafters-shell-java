@@ -16,7 +16,6 @@ public class ArgumentParser {
       if (character == '\\' && inDoubleQuotes) {
         if (i + 1 < input.length() && (input.charAt(i + 1) == '"' || input.charAt(i + 1) == '\\')) {
           current.append(input.charAt(++i));
-          i++; // skip next character
         } else {
           current.append(character);
         }
@@ -28,7 +27,6 @@ public class ArgumentParser {
       if (character == '\\' && !inSingleQuotes && !inDoubleQuotes) {
         if (i + 1 < input.length()) {
           current.append(input.charAt(++i));
-          i++; // skip next character
         }
         continue;
       }

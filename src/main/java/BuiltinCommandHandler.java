@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class BuiltinCommandHandler {
 
-  private static final Set<String> BUILT_INS = Set.of("echo", "cd", "pwd", "type");
+  private static final Set<String> BUILT_INS = Set.of("exit","echo", "cd", "pwd", "type");
 
   public boolean handle(String input, Shell shell) throws Exception {
     String[] parts = input.split("\\s+", 2);
@@ -42,11 +42,16 @@ public class BuiltinCommandHandler {
   }
 
   private void handleType(String arg) {
-    File f = ExecutableResolver.find(arg);
-    if (f != null) {
-      System.out.println(arg + " is " + f.getAbsolutePath());
+
+    if (BUILT_INS.contains(arg)) {
+      System.out.println(arg + " is a shell builtin");
     } else {
-      System.out.println(arg + ": not found");
+      File f = ExecutableResolver.find(arg);
+      if (f != null) {
+        System.out.println(arg + " is " + f.getAbsolutePath());
+      } else {
+        System.out.println(arg + ": not found");
+      }
     }
   }
 
