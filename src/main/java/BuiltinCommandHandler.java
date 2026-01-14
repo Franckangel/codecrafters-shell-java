@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class BuiltinCommandHandler {
 
-  private static final Set<String> BUILT_INS = Set.of("exit","echo", "cd", "pwd", "type");
+  public static final Set<String> BUILT_INS = Set.of("exit","echo", "cd", "pwd", "type");
 
   public boolean handle(String input, Shell shell) throws Exception {
     String[] parts = input.split("\\s+", 2);
