@@ -1,6 +1,6 @@
 import java.io.File;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class ExecutableResolver {
 
@@ -16,7 +16,7 @@ public class ExecutableResolver {
 
   public static Set<String> getExecutables(){
 
-    Set<String> executables = new HashSet<>();
+    Set<String> executables = new TreeSet<>();
     File[] files = null;
     if(directories == null)
       return null;

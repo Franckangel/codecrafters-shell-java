@@ -1,12 +1,11 @@
 import java.io.File;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.DefaultParser;
-import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
@@ -18,13 +17,14 @@ public class Shell {
   @SuppressWarnings("ConvertToTryWithResources")
   public void run() throws Exception {
 
-    Terminal terminal = TerminalBuilder.builder().system(true).systemOutput(TerminalBuilder.SystemOutput.ForcedSysOut).build();
+    Terminal terminal = TerminalBuilder.builder().system(true).build();
 
     Set<String> pathExecutables = ExecutableResolver.getExecutables();
-    Set<String> allExecutables = new HashSet<>(BuiltinCommandHandler.BUILT_INS);
+    Set<String> allExecutables = new TreeSet<>(BuiltinCommandHandler.BUILT_INS);
     allExecutables.addAll(pathExecutables);
-    
-    Completer completer = new StringsCompleter(allExecutables);
+
+    Completer completer =
+        new ShellCompleter(allExecutables);
 
     DefaultParser parser = new DefaultParser();
     parser.setEscapeChars(new char[0]);
