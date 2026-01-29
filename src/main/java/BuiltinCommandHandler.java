@@ -111,14 +111,36 @@ public class BuiltinCommandHandler {
     Terminal terminal = shell.getTerminal();
     int count = cmdList.size();
     int total = count;
-    if (input.matches("^history \\d$")) {
-      String[] parts = input.split(" ");
-      count = Integer.parseInt(parts[1]);
-    }
 
-    int start = total - count;
-    for (int i = start; i < total; i++) {
-      terminal.writer().println("    " + (i + 1) + "  " + cmdList.get(i));
+    if (input.matches("^history -r .+$")) {
+      String[] parts = input.split("-r");
+      String filePathString = parts[1].trim();
+
+      Path filePath = shell.getCurrentDirectory().toPath().resolve(filePathString);
+
+      List<String> lines = new ArrayList<>();
+
+      try {
+        if (Files.exists(filePath)) lines = Files.readAllLines(filePath);
+      } catch (IOException ex) {
+        System.getLogger(BuiltinCommandHandler.class.getName())
+            .log(System.Logger.Level.ERROR, (String) null, ex);
+      }
+
+      for (String line : lines) {
+        cmdList.add(line);
+      }
+    } else {
+
+      if (input.matches("^history \\d$")) {
+        String[] parts = input.split(" ");
+        count = Integer.parseInt(parts[1]);
+      }
+
+      int start = total - count;
+      for (int i = start; i < total; i++) {
+        terminal.writer().println("    " + (i + 1) + "  " + cmdList.get(i));
+      }
     }
   }
 }
