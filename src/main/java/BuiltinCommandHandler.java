@@ -13,7 +13,8 @@ import org.jline.terminal.Terminal;
 
 public class BuiltinCommandHandler {
 
-  public static final Set<String> BUILT_INS = Set.of("exit", "echo", "cd", "pwd", "type", "history");
+  public static final Set<String> BUILT_INS =
+      Set.of("exit", "echo", "cd", "pwd", "type", "history");
 
   private static List<String> cmdList = new ArrayList<>();
 
@@ -39,12 +40,12 @@ public class BuiltinCommandHandler {
       case "type" -> handleType(parts.length > 1 ? parts[1] : "", out);
       case "echo" -> handleEcho(parts.length > 1 ? parts[1] : "", shell, out);
       case "exit" -> System.exit(0);
-      case "history" -> handleHistory(shell);
+      case "history" -> handleHistory(shell, input);
     }
     return true;
   }
 
-  // HELPERS 
+  // HELPERS
 
   private void write(OutputStream out, String s) throws IOException {
     out.write((s + System.lineSeparator()).getBytes());
@@ -93,30 +94,31 @@ public class BuiltinCommandHandler {
 
       if (Files.notExists(filePath)) Files.createFile(filePath);
 
-      if(redirection.isStdout()){
+      if (redirection.isStdout()) {
         Files.writeString(filePath, output + System.lineSeparator());
 
-      }else if (redirection.isStderr() || redirection.isAppendError()) {
+      } else if (redirection.isStderr() || redirection.isAppendError()) {
         write(out, output);
-      }     
-      else if (redirection.isAppendOutput()) {
+      } else if (redirection.isAppendOutput()) {
         Files.writeString(filePath, output + System.lineSeparator(), StandardOpenOption.APPEND);
-      } 
+      }
     } else {
       write(out, output);
     }
   }
 
-    private void handleHistory(Shell shell) {
-        Terminal terminal = shell.getTerminal();
-
-        int i = 0;
-
-        for(String cmd : cmdList){
-          i++;
-          terminal.writer().println("    "+ i + "  " + cmd);
-
-        }
-
+  private void handleHistory(Shell shell, String input) {
+    Terminal terminal = shell.getTerminal();
+    int count = cmdList.size();
+    int total = count;
+    if (input.matches("^history \\d$")) {
+      String[] parts = input.split(" ");
+      count = Integer.parseInt(parts[1]);
     }
+
+    int start = total - count;
+    for (int i = start; i < total; i++) {
+      terminal.writer().println("    " + (i + 1) + "  " + cmdList.get(i));
+    }
+  }
 }
