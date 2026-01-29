@@ -39,7 +39,7 @@ public class BuiltinCommandHandler {
       case "cd" -> handleCd(parts.length > 1 ? parts[1] : "", shell, err);
       case "type" -> handleType(parts.length > 1 ? parts[1] : "", out);
       case "echo" -> handleEcho(parts.length > 1 ? parts[1] : "", shell, out);
-      case "exit" -> System.exit(0);
+      case "exit" -> handleExit(shell);
       case "history" -> handleHistory(shell, input);
     }
     return true;
@@ -114,7 +114,7 @@ public class BuiltinCommandHandler {
 
     if (input.matches("^history -w .+$") || input.matches("^history -a .+$")) {
       // write command list into the file
-      String[] parts = input.contains("-w") ? input.split("-w") : input.split("-a") ;
+      String[] parts = input.contains("-w") ? input.split("-w") : input.split("-a");
       String filePathString = parts[1].trim();
       Path filePath = shell.getCurrentDirectory().toPath().resolve(filePathString);
 
@@ -150,7 +150,6 @@ public class BuiltinCommandHandler {
       System.getLogger(BuiltinCommandHandler.class.getName())
           .log(System.Logger.Level.ERROR, (String) null, ex);
     }
-
     cmdList = new ArrayList<>();
   }
 
@@ -167,5 +166,14 @@ public class BuiltinCommandHandler {
     for (String line : lines) {
       cmdList.add(line);
     }
+  }
+
+  private void handleExit(Shell shell) {
+    String histfile = System.getenv("HISTFILE");
+    if (histfile != null) {
+      Path histfilePath = shell.getCurrentDirectory().toPath().resolve(histfile);
+      saveCommandList(histfilePath);
+    }
+    System.exit(0);
   }
 }

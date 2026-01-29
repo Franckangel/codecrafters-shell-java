@@ -48,11 +48,6 @@ public class Shell {
 
       try {
         String input = lineReader.readLine("$ ");
-
-        if (input.equals("exit")) {
-          terminal.close();
-          return;
-        }
         dispatcher.dispatch(input, this);
       } catch (Exception e) {
 
