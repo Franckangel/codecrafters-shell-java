@@ -5,12 +5,17 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.jline.terminal.Terminal;
 
 public class BuiltinCommandHandler {
 
   public static final Set<String> BUILT_INS = Set.of("exit", "echo", "cd", "pwd", "type", "history");
+
+  private static List<String> cmdList = new ArrayList<>();
 
   // NON-PIPELINE ENTRY (unchanged behavior)
   public boolean handle(String input, Shell shell) throws Exception {
@@ -24,6 +29,7 @@ public class BuiltinCommandHandler {
 
     String[] parts = input.split("\\s+", 2);
     String cmd = parts[0];
+    cmdList.add(input);
 
     if (!BUILT_INS.contains(cmd)) return false;
 
@@ -33,6 +39,7 @@ public class BuiltinCommandHandler {
       case "type" -> handleType(parts.length > 1 ? parts[1] : "", out);
       case "echo" -> handleEcho(parts.length > 1 ? parts[1] : "", shell, out);
       case "exit" -> System.exit(0);
+      case "history" -> handleHistory(shell);
     }
     return true;
   }
@@ -99,4 +106,17 @@ public class BuiltinCommandHandler {
       write(out, output);
     }
   }
+
+    private void handleHistory(Shell shell) {
+        Terminal terminal = shell.getTerminal();
+
+        int i = 0;
+
+        for(String cmd : cmdList){
+          i++;
+          terminal.writer().println("    "+ i + "  " + cmd);
+
+        }
+
+    }
 }

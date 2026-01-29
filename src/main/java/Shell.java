@@ -13,11 +13,12 @@ public class Shell {
 
   private File currentDirectory = new File(System.getProperty("user.dir"));
   private final CommandDispatcher dispatcher = new CommandDispatcher();
+  Terminal terminal;
 
   @SuppressWarnings("ConvertToTryWithResources")
   public void run() throws Exception {
 
-    Terminal terminal = TerminalBuilder.builder().system(true).build();
+    terminal = TerminalBuilder.builder().system(true).build();
 
     Set<String> pathExecutables = ExecutableResolver.getExecutables();
     Set<String> allExecutables = new TreeSet<>(BuiltinCommandHandler.BUILT_INS);
@@ -54,5 +55,9 @@ public class Shell {
 
   public void setCurrentDirectory(File dir) {
     this.currentDirectory = dir;
+  }
+
+  public Terminal getTerminal(){
+    return terminal;
   }
 }
