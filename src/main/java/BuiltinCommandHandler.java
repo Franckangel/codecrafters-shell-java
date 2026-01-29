@@ -172,6 +172,12 @@ public class BuiltinCommandHandler {
     String histfile = System.getenv("HISTFILE");
     if (histfile != null) {
       Path histfilePath = shell.getCurrentDirectory().toPath().resolve(histfile);
+        try {
+            List<String> lines = Files.readAllLines(histfilePath);
+            cmdList = cmdList.subList(lines.size(), cmdList.size());
+        } catch (IOException ex) {
+            System.getLogger(BuiltinCommandHandler.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
       saveCommandList(histfilePath);
     }
     System.exit(0);
