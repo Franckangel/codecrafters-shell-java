@@ -1,4 +1,5 @@
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -14,6 +15,16 @@ public class Shell {
   private File currentDirectory = new File(System.getProperty("user.dir"));
   private final CommandDispatcher dispatcher = new CommandDispatcher();
   Terminal terminal;
+  private final BuiltinCommandHandler builtinCommandHandler = new BuiltinCommandHandler();
+
+  public Shell(){
+    String histfile = System.getenv("HISTFILE");
+
+    if(histfile != null){
+      Path histfilePath = currentDirectory.toPath().resolve(histfile);
+      builtinCommandHandler.readFromFile(histfilePath);
+    }
+  }
 
   @SuppressWarnings("ConvertToTryWithResources")
   public void run() throws Exception {

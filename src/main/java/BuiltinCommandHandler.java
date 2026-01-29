@@ -141,7 +141,7 @@ public class BuiltinCommandHandler {
     }
   }
 
-  private void saveCommandList(Path filePath) {
+  public void saveCommandList(Path filePath) {
 
     try {
 
@@ -154,7 +154,7 @@ public class BuiltinCommandHandler {
     cmdList = new ArrayList<>();
   }
 
-  private void readFromFile(Path filePath) {
+  public void readFromFile(Path filePath) {
     List<String> lines = new ArrayList<>();
 
     try {
