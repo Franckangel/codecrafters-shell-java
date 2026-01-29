@@ -112,9 +112,9 @@ public class BuiltinCommandHandler {
     int count = cmdList.size();
     int total = count;
 
-    if (input.matches("^history -w .+$")) {
+    if (input.matches("^history -w .+$") || input.matches("^history -a .+$")) {
       // write command list into the file
-      String[] parts = input.split("-w");
+      String[] parts = input.contains("-w") ? input.split("-w") : input.split("-a") ;
       String filePathString = parts[1].trim();
       Path filePath = shell.getCurrentDirectory().toPath().resolve(filePathString);
 
@@ -150,6 +150,8 @@ public class BuiltinCommandHandler {
       System.getLogger(BuiltinCommandHandler.class.getName())
           .log(System.Logger.Level.ERROR, (String) null, ex);
     }
+
+    cmdList = new ArrayList<>();
   }
 
   private void readFromFile(Path filePath) {
