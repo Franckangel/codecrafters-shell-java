@@ -112,24 +112,21 @@ public class BuiltinCommandHandler {
     int count = cmdList.size();
     int total = count;
 
-    if (input.matches("^history -r .+$")) {
+    if (input.matches("^history -w .+$")) {
+      // write command list into the file
+      String[] parts = input.split("-w");
+      String filePathString = parts[1].trim();
+      Path filePath = shell.getCurrentDirectory().toPath().resolve(filePathString);
+
+      saveCommandList(filePath);
+    } else if (input.matches("^history -r .+$")) {
       String[] parts = input.split("-r");
       String filePathString = parts[1].trim();
 
       Path filePath = shell.getCurrentDirectory().toPath().resolve(filePathString);
 
-      List<String> lines = new ArrayList<>();
+      readFromFile(filePath);
 
-      try {
-        if (Files.exists(filePath)) lines = Files.readAllLines(filePath);
-      } catch (IOException ex) {
-        System.getLogger(BuiltinCommandHandler.class.getName())
-            .log(System.Logger.Level.ERROR, (String) null, ex);
-      }
-
-      for (String line : lines) {
-        cmdList.add(line);
-      }
     } else {
 
       if (input.matches("^history \\d$")) {
@@ -141,6 +138,32 @@ public class BuiltinCommandHandler {
       for (int i = start; i < total; i++) {
         terminal.writer().println("    " + (i + 1) + "  " + cmdList.get(i));
       }
+    }
+  }
+
+  private void saveCommandList(Path filePath) {
+
+    try {
+
+      Files.write(filePath, cmdList, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+    } catch (IOException ex) {
+      System.getLogger(BuiltinCommandHandler.class.getName())
+          .log(System.Logger.Level.ERROR, (String) null, ex);
+    }
+  }
+
+  private void readFromFile(Path filePath) {
+    List<String> lines = new ArrayList<>();
+
+    try {
+      if (Files.exists(filePath)) lines = Files.readAllLines(filePath);
+    } catch (IOException ex) {
+      System.getLogger(BuiltinCommandHandler.class.getName())
+          .log(System.Logger.Level.ERROR, (String) null, ex);
+    }
+
+    for (String line : lines) {
+      cmdList.add(line);
     }
   }
 }
